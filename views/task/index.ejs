@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Task</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body class="container" style="margin-top: 50px;">
+    <% if (messages.success) { %>
+    <div class="alert alert-success" role="alert"><%- messages.success %></div>
+    <% } %>
+
+    <% if (messages.error) { %>
+    <div class="alert alert-danger" role="alert"><%- messages.error %></div>
+    <% } %>
+
+    <div class="card"> 
+        <div class="card-header">
+            <ul class="nav nav-pills w-100">
+                <li class="nav-pill active">
+                    <a class="nav-link"> Daily Task</a>
+                </li>
+                <li class="nav-pill ml-auto">
+                    <a class="nav-link active" href="/task/add">Add Task</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <% if(data.length) { %>
+        <div class="container row mt-5">
+            <% for(var i = 0; i< data.length; i++) { %>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title"><%= data[i].name%></h5>
+                  <h6 class="card-subtitle mb-2 text-muted"><%= data[i].assign%></h6>
+                  <p class="card-text"><%= data[i].description%></p>
+                  <p class="card-text">Start Date:<%= data[i].startdate%></p>
+                  <p class="card-text">End Date:<%= data[i].enddate%></p>
+                  <a class="btn btn-success edit" href="./task/edit/<%=data[i].id%>">Edit</a>
+                  <a class="btn btn-danger delete" onclick="return alert('Are you sure want to delete this record?')" href="./task/delete/<%=data[i].id%>">Delete</a>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <% } %>
+    </div>
+</body>
+</html>
