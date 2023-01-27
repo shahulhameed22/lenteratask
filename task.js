@@ -2,23 +2,22 @@ var express = require('express');
 var router = express.Router();
 var dbConn  = require('./connection');
  
-// display user page
+
 router.get('/', function(req, res, next) {      
     dbConn.query('SELECT * FROM task ORDER BY id desc',function(err,rows)     {
         if(err) {
             req.flash('error', err);
-            // render to views/users/index.ejs
             res.render('task',{data:''});   
         } else {
-            // render to views/users/index.ejs
+            
             res.render('task',{data:rows});
         }
     });
 });
 
-// display add user page
+
 router.get('/add', function(req, res, next) {    
-    // render to add.ejs
+    
     res.render('task/add', {
         name: '',
         startdate: '',
@@ -28,7 +27,7 @@ router.get('/add', function(req, res, next) {
     })
 })
 
-// add a new user
+
 router.post('/add', function(req, res, next) {    
 
     let name = req.body.name;
@@ -41,9 +40,9 @@ router.post('/add', function(req, res, next) {
     if(name.length === 0 || startdate.length === 0 || enddate.length === 0 || assign.length === 0 || description.length === 0) {
         errors = true;
 
-        // set flash message
+        
         req.flash('error', "Please enter name and startdate and enddate and assign and description");
-        // render to add.ejs with flash message
+        
         res.render('task/add', {
             name: name,
             startdate: startdate,
@@ -53,7 +52,7 @@ router.post('/add', function(req, res, next) {
         })
     }
 
-    // if no error
+    
     if(!errors) {
 
         var form_data = {
@@ -64,13 +63,13 @@ router.post('/add', function(req, res, next) {
             description:description
         }
         
-        // insert query
+        
         dbConn.query('INSERT INTO task SET ?', form_data, function(err, result) {
-            //if(err) throw err
+            
             if (err) {
                 req.flash('error', err)
                  
-                // render to add.ejs
+
                 res.render('task/add', {
                     name: form_data.name,
                     startdate: form_data.startdate,
@@ -86,7 +85,7 @@ router.post('/add', function(req, res, next) {
     }
 })
 
-// display edit user page
+
 router.get('/edit/:id', function(req, res, next) {
 
     let id = req.params.id;
@@ -94,14 +93,14 @@ router.get('/edit/:id', function(req, res, next) {
     dbConn.query('SELECT * FROM task WHERE id = ' + id, function(err, rows, fields) {
         if(err) throw err
          
-        // if user not found
+        
         if (rows.length <= 0) {
             req.flash('error', 'User not found with id = ' + id)
             res.redirect('/task')
         }
-        // if user found
+        
         else {
-            // render to edit.ejs
+            
             res.render('task/edit/:id', {
                 title: 'Edit task', 
                 id: rows[0].id,
@@ -115,7 +114,7 @@ router.get('/edit/:id', function(req, res, next) {
     })
 })
 
-// update user data
+
 router.post('/update/:id', function(req, res, next) {
 
     let id = req.params.id;
@@ -129,9 +128,9 @@ router.post('/update/:id', function(req, res, next) {
     if(name.length === 0 || startdate.length === 0 || enddate.length === 0 || assign.length === 0 || description.length === 0) {
         errors = true;
         
-        // set flash message
+        
         req.flash('error', "Please enter name and email and position");
-        // render to add.ejs with flash message
+        
         res.render('task/edit', {
             id: req.params.id,
             name: name,
@@ -142,7 +141,7 @@ router.post('/update/:id', function(req, res, next) {
         })
     }
 
-    // if no error
+    
     if( !errors ) {   
  
         var form_data = {
@@ -152,13 +151,13 @@ router.post('/update/:id', function(req, res, next) {
             assign: assign,
             description:description
         }
-        // update query
+        
         dbConn.query('UPDATE task SET ? WHERE id = ' + id, form_data, function(err, result) {
-            //if(err) throw err
+            
             if (err) {
-                // set flash message
+                
                 req.flash('error', err)
-                // render to edit.ejs
+                
                 res.render('task/edit', {
                     id: req.params.id,
                     name: form_data.name,
@@ -175,22 +174,22 @@ router.post('/update/:id', function(req, res, next) {
     }
 })
    
-// delete user
+
 router.get('/delete/(:id)', function(req, res, next) {
 
     let id = req.params.id;
      
     dbConn.query('DELETE FROM task WHERE id = ' + id, function(err, result) {
-        //if(err) throw err
+        
         if (err) {
-            // set flash message
+            
             req.flash('error', err)
-            // redirect to user page
+            
             res.redirect('/task')
         } else {
-            // set flash message
+            
             req.flash('success', 'Tasksuccessfully deleted! ID = ' + id)
-            // redirect to user page
+            
             res.redirect('/task')
         }
     })
